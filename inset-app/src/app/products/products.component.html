@@ -1,0 +1,71 @@
+<div class="container mt-3">
+  <div class="card shadow-sm">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+      <h3 class="mb-0">Liste des Produits</h3>
+      <button class="btn btn-light btn-sm" routerLink="/new-product">
+        <i class="bi bi-plus-circle"></i> Ajouter
+      </button>
+    </div>
+    <div class="card-body">
+      <!-- Exercice 3 : barre de recherche -->
+      <div class="input-group mb-3">
+        <span class="input-group-text"><i class="bi bi-search"></i></span>
+        <input type="text" class="form-control" placeholder="Rechercher un produit..."
+               [(ngModel)]="keyword">
+        @if (keyword) {
+          <button class="btn btn-outline-secondary" (click)="keyword = ''">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        }
+      </div>
+
+      @if (errorMessage) {
+        <div class="alert alert-danger">{{ errorMessage }}</div>
+      } @else if (products) {
+        <table class="table table-hover align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>ID</th>
+              <th>Nom</th>
+              <th>Prix</th>
+              <th>Statut</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (p of filteredProducts; track p.id) {
+              <tr>
+                <td>{{ p.id }}</td>
+                <td>{{ p.name }}</td>
+                <td>{{ p.price | currency:'EUR' }}</td>
+                <td>
+                  <!-- Exercice 2 : badge cliquable -->
+                  @if (p.selected) {
+                    <span class="badge bg-success-subtle text-success border border-success clickable"
+                          (click)="handleToggle(p)" title="Cliquer pour désélectionner">
+                      <i class="bi bi-check-circle-fill"></i> Sélectionné
+                    </span>
+                  } @else {
+                    <span class="badge bg-secondary-subtle text-secondary border clickable"
+                          (click)="handleToggle(p)" title="Cliquer pour sélectionner">
+                      <i class="bi bi-circle"></i> Non sélectionné
+                    </span>
+                  }
+                </td>
+                <td>
+                  <button (click)="handleDelete(p)" class="btn btn-outline-danger btn-sm">
+                    <i class="bi bi-trash"></i> Supprimer
+                  </button>
+                </td>
+              </tr>
+            } @empty {
+              <tr><td colspan="5" class="text-center text-muted">Aucun produit trouvé.</td></tr>
+            }
+          </tbody>
+        </table>
+      } @else {
+        <div class="alert alert-info">Chargement du catalogue en cours...</div>
+      }
+    </div>
+  </div>
+</div>
